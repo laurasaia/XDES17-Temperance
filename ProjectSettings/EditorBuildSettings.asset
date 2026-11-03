@@ -8,5 +8,11 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Project/Scenes/SampleScene.unity
     guid: 8c9cfa26abfee488c85f1582747f6a02
+  - enabled: 1
+    path: Assets/Project/Scenes/Main Menu.unity
+    guid: 39072d0caa72e264daf0f60d002e7518
+  - enabled: 1
+    path: Assets/Project/Levels/The Tower/Scenes/The Tower.unity
+    guid: 17604701964580145bc57809661b31ad
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
