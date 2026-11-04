@@ -4,8 +4,7 @@ using UnityEngine.InputSystem;
 public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] private float speed = 5f;
-
-    [Header("Física (atrito)")]
+    [SerializeField] private float airAcceleration = 150f;
     [SerializeField] private PhysicsMaterial2D noFriction;
     [SerializeField] private PhysicsMaterial2D withFriction;
 
@@ -13,7 +12,11 @@ public class PlayerMovement : MonoBehaviour
     private SpriteRenderer sr;
     private Collider2D col;
     private PlayerJump playerJump;
+    private PlayerWallJump wallJump;
+    private PlayerAttack attack;
     private float moveInput;
+
+    public bool FacingLeft { get; set; }
 
     void Awake()
     {
@@ -21,6 +24,8 @@ public class PlayerMovement : MonoBehaviour
         sr = GetComponentInChildren<SpriteRenderer>();
         col = GetComponent<Collider2D>();
         playerJump = GetComponent<PlayerJump>();
+        wallJump = GetComponent<PlayerWallJump>();
+        attack = GetComponent<PlayerAttack>();
     }
 
     void Update()
@@ -33,22 +38,46 @@ public class PlayerMovement : MonoBehaviour
             if (Keyboard.current.dKey.isPressed) moveInput += 1f;
         }
 
-        // Vira o sprite conforme a direção (mantém o último lado quando parado)
-        if (moveInput > 0f) sr.flipX = false;
-        else if (moveInput < 0f) sr.flipX = true;
+        bool attacking = attack != null && attack.IsAttacking;
+        bool grounded = playerJump != null && playerJump.IsGrounded;
+
+        // No chão, durante o ataque, o personagem não vira
+        if (!(attacking && grounded))
+        {
+            if (moveInput > 0f) FacingLeft = false;
+            else if (moveInput < 0f) FacingLeft = true;
+        }
     }
 
     void FixedUpdate()
     {
-        rb.linearVelocity = new Vector2(moveInput * speed, rb.linearVelocity.y);
-
-        // Atrito só quando está parado E no chão. No ar ou andando: sem atrito.
         bool grounded = playerJump != null && playerJump.IsGrounded;
-        PhysicsMaterial2D desired = (moveInput == 0f && grounded) ? withFriction : noFriction;
+        bool wallJumping = wallJump != null && wallJump.IsWallJumping;
+        bool attacking = attack != null && attack.IsAttacking;
 
-        if (col.sharedMaterial != desired)
+        if (grounded)
         {
-            col.sharedMaterial = desired;
+            // No chão, durante o ataque, fica parado
+            float x = attacking ? 0f : moveInput * speed;
+            rb.linearVelocity = new Vector2(x, rb.linearVelocity.y);
         }
+        else if (moveInput != 0f)
+        {
+            float x = Mathf.MoveTowards(rb.linearVelocity.x, moveInput * speed, airAcceleration * Time.fixedDeltaTime);
+            rb.linearVelocity = new Vector2(x, rb.linearVelocity.y);
+        }
+        else if (!wallJumping)
+        {
+            rb.linearVelocity = new Vector2(0f, rb.linearVelocity.y);
+        }
+
+        bool stopped = grounded && (moveInput == 0f || attacking);
+        PhysicsMaterial2D desired = stopped ? withFriction : noFriction;
+        if (col.sharedMaterial != desired) col.sharedMaterial = desired;
+    }
+
+    void LateUpdate()
+    {
+        sr.flipX = FacingLeft;
     }
 }
