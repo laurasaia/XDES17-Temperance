@@ -41,6 +41,15 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Background B
+    uniqueID: 4191407875
+    locked: 0
+  - name: Middleground B
+    uniqueID: 647166261
+    locked: 0
+  - name: Foreground B
+    uniqueID: 1498956585
+    locked: 0
   - name: Background
     uniqueID: 836000777
     locked: 0
@@ -49,6 +58,9 @@ TagManager:
     locked: 0
   - name: Ground
     uniqueID: 1308879501
+    locked: 0
+  - name: Deco
+    uniqueID: 2362341711
     locked: 0
   - name: Player
     uniqueID: 3982036827
