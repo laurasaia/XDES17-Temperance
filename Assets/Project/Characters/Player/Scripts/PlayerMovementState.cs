@@ -3,15 +3,7 @@ using UnityEngine;
 
 public class PlayerMovementState : MonoBehaviour
 {
-    public enum MoveState
-    {
-        Idle,
-        Run,
-        Jump,
-        Fall,
-        WallSlide,
-        Attack
-    }
+    public enum MoveState { Idle, Run, Jump, Fall, WallSlide, Attack, Hurt, Death }
 
     private const string idleAnim = "Idle";
     private const string runAnim = "Run";
@@ -19,6 +11,8 @@ public class PlayerMovementState : MonoBehaviour
     private const string fallAnim = "Fall";
     private const string wallSlideAnim = "WallSlide";
     private const string attackAnim = "Attack";
+    private const string hurtAnim = "Hurt";
+    private const string deathAnim = "Death";
 
     public static Action<MoveState> OnPlayerMoveStateChanged;
 
@@ -29,6 +23,7 @@ public class PlayerMovementState : MonoBehaviour
     private PlayerJump playerJump;
     private PlayerWallJump wallJump;
     private PlayerAttack attack;
+    private PlayerHealth health;
     private float xPosLastFrame;
 
     void Awake()
@@ -38,6 +33,7 @@ public class PlayerMovementState : MonoBehaviour
         playerJump = GetComponent<PlayerJump>();
         wallJump = GetComponent<PlayerWallJump>();
         attack = GetComponent<PlayerAttack>();
+        health = GetComponent<PlayerHealth>();
     }
 
     void Update()
@@ -46,33 +42,26 @@ public class PlayerMovementState : MonoBehaviour
         bool moved = !Mathf.Approximately(transform.position.x, xPosLastFrame);
         bool wallSliding = wallJump != null && wallJump.IsWallSliding;
 
-        if (attack != null && attack.IsAttacking)
+        if (health != null && health.IsDead)
+        {
+            SetMoveState(MoveState.Death);
+        }
+        else if (health != null && health.IsHurt)
+        {
+            SetMoveState(MoveState.Hurt);
+        }
+        else if (attack != null && attack.IsAttacking)
         {
             SetMoveState(MoveState.Attack);
 
-            // O clip decide quando o ataque acaba
             AnimatorStateInfo info = animator.GetCurrentAnimatorStateInfo(0);
             if (info.IsName(attackAnim) && info.normalizedTime >= 1f)
-            {
                 attack.FinishAttack();
-            }
         }
-        else if (wallSliding)
-        {
-            SetMoveState(MoveState.WallSlide);
-        }
-        else if (!grounded)
-        {
-            SetMoveState(rb.linearVelocity.y > 0.1f ? MoveState.Jump : MoveState.Fall);
-        }
-        else if (moved)
-        {
-            SetMoveState(MoveState.Run);
-        }
-        else
-        {
-            SetMoveState(MoveState.Idle);
-        }
+        else if (wallSliding) SetMoveState(MoveState.WallSlide);
+        else if (!grounded) SetMoveState(rb.linearVelocity.y > 0.1f ? MoveState.Jump : MoveState.Fall);
+        else if (moved) SetMoveState(MoveState.Run);
+        else SetMoveState(MoveState.Idle);
 
         xPosLastFrame = transform.position.x;
     }
@@ -89,9 +78,8 @@ public class PlayerMovementState : MonoBehaviour
             case MoveState.Fall:      animator.Play(fallAnim); break;
             case MoveState.WallSlide: animator.Play(wallSlideAnim); break;
             case MoveState.Attack:    animator.Play(attackAnim, 0, 0f); break;
-            default:
-                Debug.LogError($"Invalid movement state: {moveState}");
-                break;
+            case MoveState.Hurt:      animator.Play(hurtAnim, 0, 0f); break;
+            case MoveState.Death:     animator.Play(deathAnim, 0, 0f); break;
         }
 
         OnPlayerMoveStateChanged?.Invoke(moveState);

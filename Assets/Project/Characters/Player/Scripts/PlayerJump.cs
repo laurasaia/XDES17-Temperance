@@ -7,23 +7,25 @@ public class PlayerJump : MonoBehaviour
 
     [Header("Detecção de chão")]
     [SerializeField] private Transform groundCheck;
-    [SerializeField] private float groundCheckRadius = 0.15f;
+    [SerializeField] private float groundCheckRadius = 0.1f;
     [SerializeField] private LayerMask groundLayer;
 
     private Rigidbody2D rb;
+    private PlayerHealth health;
     private bool isGrounded;
     private bool jumpRequested;
 
-    // Permite que outros scripts leiam se está no chão
     public bool IsGrounded => isGrounded;
 
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        health = GetComponent<PlayerHealth>();
     }
 
     void Update()
     {
+        if (health != null && (health.IsDead || health.IsHurt)) return;
         if (Keyboard.current == null) return;
 
         if (Keyboard.current.spaceKey.wasPressedThisFrame && isGrounded)

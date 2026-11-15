@@ -6,6 +6,7 @@ public class PlayerAttack : MonoBehaviour
     [SerializeField] private float attackCooldown = 0.1f;
 
     private PlayerWallJump wallJump;
+    private PlayerHealth health;
     private float nextAttackTime;
 
     public bool IsAttacking { get; private set; }
@@ -13,10 +14,18 @@ public class PlayerAttack : MonoBehaviour
     void Awake()
     {
         wallJump = GetComponent<PlayerWallJump>();
+        health = GetComponent<PlayerHealth>();
     }
 
     void Update()
     {
+        // Se foi ferido ou morreu, cancela o ataque para não travar
+        if (health != null && (health.IsHurt || health.IsDead))
+        {
+            IsAttacking = false;
+            return;
+        }
+
         if (Mouse.current == null) return;
 
         bool onWall = wallJump != null && wallJump.IsWallSliding;

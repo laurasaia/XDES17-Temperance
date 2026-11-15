@@ -7,6 +7,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float airAcceleration = 150f;
     [SerializeField] private PhysicsMaterial2D noFriction;
     [SerializeField] private PhysicsMaterial2D withFriction;
+    [SerializeField] private Transform attackHitbox;
 
     private Rigidbody2D rb;
     private SpriteRenderer sr;
@@ -14,6 +15,7 @@ public class PlayerMovement : MonoBehaviour
     private PlayerJump playerJump;
     private PlayerWallJump wallJump;
     private PlayerAttack attack;
+    private PlayerHealth health;
     private float moveInput;
 
     public bool FacingLeft { get; set; }
@@ -26,11 +28,14 @@ public class PlayerMovement : MonoBehaviour
         playerJump = GetComponent<PlayerJump>();
         wallJump = GetComponent<PlayerWallJump>();
         attack = GetComponent<PlayerAttack>();
+        health = GetComponent<PlayerHealth>();
     }
 
     void Update()
     {
         moveInput = 0f;
+
+        if (health != null && (health.IsDead || health.IsHurt)) return;
 
         if (Keyboard.current != null)
         {
@@ -41,7 +46,6 @@ public class PlayerMovement : MonoBehaviour
         bool attacking = attack != null && attack.IsAttacking;
         bool grounded = playerJump != null && playerJump.IsGrounded;
 
-        // No chão, durante o ataque, o personagem não vira
         if (!(attacking && grounded))
         {
             if (moveInput > 0f) FacingLeft = false;
@@ -51,13 +55,21 @@ public class PlayerMovement : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (health != null && health.IsDead)
+        {
+            rb.linearVelocity = new Vector2(0f, rb.linearVelocity.y);
+            return;
+        }
+
+        // Durante o hurt, o knockback manda na velocidade
+        if (health != null && health.IsHurt) return;
+
         bool grounded = playerJump != null && playerJump.IsGrounded;
         bool wallJumping = wallJump != null && wallJump.IsWallJumping;
         bool attacking = attack != null && attack.IsAttacking;
 
         if (grounded)
         {
-            // No chão, durante o ataque, fica parado
             float x = attacking ? 0f : moveInput * speed;
             rb.linearVelocity = new Vector2(x, rb.linearVelocity.y);
         }
@@ -79,5 +91,8 @@ public class PlayerMovement : MonoBehaviour
     void LateUpdate()
     {
         sr.flipX = FacingLeft;
+
+        if (attackHitbox != null)
+            attackHitbox.localScale = new Vector3(FacingLeft ? -1f : 1f, 1f, 1f);
     }
 }
