@@ -7,6 +7,7 @@ public class PlayerAttack : MonoBehaviour
 
     private PlayerWallJump wallJump;
     private PlayerHealth health;
+    private PlayerDash dash;
     private float nextAttackTime;
 
     public bool IsAttacking { get; private set; }
@@ -15,11 +16,11 @@ public class PlayerAttack : MonoBehaviour
     {
         wallJump = GetComponent<PlayerWallJump>();
         health = GetComponent<PlayerHealth>();
+        dash = GetComponent<PlayerDash>();
     }
 
     void Update()
     {
-        // Se foi ferido ou morreu, cancela o ataque para não travar
         if (health != null && (health.IsHurt || health.IsDead))
         {
             IsAttacking = false;
@@ -29,9 +30,10 @@ public class PlayerAttack : MonoBehaviour
         if (Mouse.current == null) return;
 
         bool onWall = wallJump != null && wallJump.IsWallSliding;
+        bool dashBusy = dash != null && (dash.IsBusy || dash.ConsumedClickThisFrame);
 
         if (Mouse.current.leftButton.wasPressedThisFrame
-            && !IsAttacking && !onWall
+            && !IsAttacking && !onWall && !dashBusy
             && Time.time >= nextAttackTime)
         {
             IsAttacking = true;

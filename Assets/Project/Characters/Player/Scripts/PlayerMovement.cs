@@ -16,6 +16,7 @@ public class PlayerMovement : MonoBehaviour
     private PlayerWallJump wallJump;
     private PlayerAttack attack;
     private PlayerHealth health;
+    private PlayerDash dash;
     private float moveInput;
 
     public bool FacingLeft { get; set; }
@@ -29,6 +30,7 @@ public class PlayerMovement : MonoBehaviour
         wallJump = GetComponent<PlayerWallJump>();
         attack = GetComponent<PlayerAttack>();
         health = GetComponent<PlayerHealth>();
+        dash = GetComponent<PlayerDash>();
     }
 
     void Update()
@@ -36,6 +38,7 @@ public class PlayerMovement : MonoBehaviour
         moveInput = 0f;
 
         if (health != null && (health.IsDead || health.IsHurt)) return;
+        if (dash != null && dash.IsBusy) return;
 
         if (Keyboard.current != null)
         {
@@ -45,8 +48,10 @@ public class PlayerMovement : MonoBehaviour
 
         bool attacking = attack != null && attack.IsAttacking;
         bool grounded = playerJump != null && playerJump.IsGrounded;
+        bool sticking = wallJump != null && wallJump.IsSticking;
 
-        if (!(attacking && grounded))
+        // Não vira durante o ataque no chão nem enquanto está preso à parede
+        if (!(attacking && grounded) && !sticking)
         {
             if (moveInput > 0f) FacingLeft = false;
             else if (moveInput < 0f) FacingLeft = true;
@@ -61,8 +66,12 @@ public class PlayerMovement : MonoBehaviour
             return;
         }
 
-        // Durante o hurt, o knockback manda na velocidade
+        // Durante o hurt o knockback manda; durante o dash o PlayerDash manda
         if (health != null && health.IsHurt) return;
+        if (dash != null && dash.IsBusy) return;
+
+        // Preso à parede: o PlayerWallJump controla a velocidade
+        if (wallJump != null && wallJump.IsSticking) return;
 
         bool grounded = playerJump != null && playerJump.IsGrounded;
         bool wallJumping = wallJump != null && wallJump.IsWallJumping;

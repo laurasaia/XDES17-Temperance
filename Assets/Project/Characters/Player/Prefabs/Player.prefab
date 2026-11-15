@@ -50,6 +50,7 @@ GameObject:
   - component: {fileID: 4704324121025570724}
   - component: {fileID: 6171905357743925144}
   - component: {fileID: 2530984879993002450}
+  - component: {fileID: 945332202836473417}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -289,6 +290,7 @@ MonoBehaviour:
   jumpForceY: 12
   awayForceX: 5
   lateralDecay: 7
+  wallStickTime: 0.1
 --- !u!114 &6171905357743925144
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -319,6 +321,20 @@ MonoBehaviour:
   hurtDuration: 0.3
   knockback: {x: 4, y: 5}
   restartDelay: 1.5
+--- !u!114 &945332202836473417
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4164194383566927734}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8200b4a4b78d5e34cbb7eef65b68a4f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerDash
+  dashSpeed: 14
+  dashCooldown: 0.6
 --- !u!1 &5878139034060829266
 GameObject:
   m_ObjectHideFlags: 0

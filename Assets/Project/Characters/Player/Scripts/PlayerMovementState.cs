@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class PlayerMovementState : MonoBehaviour
 {
-    public enum MoveState { Idle, Run, Jump, Fall, WallSlide, Attack, Hurt, Death }
+    public enum MoveState { Idle, Run, Jump, Fall, WallSlide, Attack, Hurt, Death, Dash, DashAttack }
 
     private const string idleAnim = "Idle";
     private const string runAnim = "Run";
@@ -13,6 +13,8 @@ public class PlayerMovementState : MonoBehaviour
     private const string attackAnim = "Attack";
     private const string hurtAnim = "Hurt";
     private const string deathAnim = "Death";
+    private const string dashAnim = "Dash";
+    private const string dashAttackAnim = "DashAttack";
 
     public static Action<MoveState> OnPlayerMoveStateChanged;
 
@@ -24,6 +26,7 @@ public class PlayerMovementState : MonoBehaviour
     private PlayerWallJump wallJump;
     private PlayerAttack attack;
     private PlayerHealth health;
+    private PlayerDash dash;
     private float xPosLastFrame;
 
     void Awake()
@@ -34,6 +37,7 @@ public class PlayerMovementState : MonoBehaviour
         wallJump = GetComponent<PlayerWallJump>();
         attack = GetComponent<PlayerAttack>();
         health = GetComponent<PlayerHealth>();
+        dash = GetComponent<PlayerDash>();
     }
 
     void Update()
@@ -49,6 +53,16 @@ public class PlayerMovementState : MonoBehaviour
         else if (health != null && health.IsHurt)
         {
             SetMoveState(MoveState.Hurt);
+        }
+        else if (dash != null && dash.IsBusy)
+        {
+            SetMoveState(dash.IsDashAttacking ? MoveState.DashAttack : MoveState.Dash);
+
+            // O clip decide quando termina; só o DashAttack encerra o ciclo
+            AnimatorStateInfo info = animator.GetCurrentAnimatorStateInfo(0);
+            string clip = dash.IsDashAttacking ? dashAttackAnim : dashAnim;
+            if (info.IsName(clip) && info.normalizedTime >= 1f)
+                dash.EndDash();
         }
         else if (attack != null && attack.IsAttacking)
         {
@@ -72,14 +86,16 @@ public class PlayerMovementState : MonoBehaviour
 
         switch (moveState)
         {
-            case MoveState.Idle:      animator.Play(idleAnim); break;
-            case MoveState.Run:       animator.Play(runAnim); break;
-            case MoveState.Jump:      animator.Play(jumpAnim); break;
-            case MoveState.Fall:      animator.Play(fallAnim); break;
-            case MoveState.WallSlide: animator.Play(wallSlideAnim); break;
-            case MoveState.Attack:    animator.Play(attackAnim, 0, 0f); break;
-            case MoveState.Hurt:      animator.Play(hurtAnim, 0, 0f); break;
-            case MoveState.Death:     animator.Play(deathAnim, 0, 0f); break;
+            case MoveState.Idle:       animator.Play(idleAnim); break;
+            case MoveState.Run:        animator.Play(runAnim); break;
+            case MoveState.Jump:       animator.Play(jumpAnim); break;
+            case MoveState.Fall:       animator.Play(fallAnim); break;
+            case MoveState.WallSlide:  animator.Play(wallSlideAnim); break;
+            case MoveState.Attack:     animator.Play(attackAnim, 0, 0f); break;
+            case MoveState.Hurt:       animator.Play(hurtAnim, 0, 0f); break;
+            case MoveState.Death:      animator.Play(deathAnim, 0, 0f); break;
+            case MoveState.Dash:       animator.Play(dashAnim, 0, 0f); break;
+            case MoveState.DashAttack: animator.Play(dashAttackAnim, 0, 0f); break;
         }
 
         OnPlayerMoveStateChanged?.Invoke(moveState);
