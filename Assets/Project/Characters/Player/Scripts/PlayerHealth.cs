@@ -3,7 +3,7 @@ using UnityEngine.SceneManagement;
 
 public class PlayerHealth : MonoBehaviour, IDamageable
 {
-    [SerializeField] private int maxHealth = 10;
+    [SerializeField] private int maxHealth = 20;
     [SerializeField] private float invulnerabilityTime = 1f;
     [SerializeField] private float hurtDuration = 0.3f;
     [SerializeField] private Vector2 knockback = new Vector2(4f, 5f);
@@ -11,6 +11,7 @@ public class PlayerHealth : MonoBehaviour, IDamageable
 
     private Rigidbody2D rb;
     private int health;
+    private int lastDamage;
     private float invulnerableUntil;
     private float hurtUntil;
 
@@ -25,27 +26,49 @@ public class PlayerHealth : MonoBehaviour, IDamageable
         health = maxHealth;
     }
 
-    public void TakeDamage(int amount) => TakeDamage(amount, transform.position);
-
-    public void TakeDamage(int amount, Vector2 sourcePosition)
+    void Update()
     {
-        if (IsDead || Time.time < invulnerableUntil) return;
+        // Terminou a janela de invulnerabilidade: o próximo dano conta normalmente
+        if (Time.time >= invulnerableUntil) lastDamage = 0;
+    }
 
+    public void TakeDamage(int amount) => TryTakeDamage(amount, transform.position);
+
+    public void TakeDamage(int amount, Vector2 sourcePosition) => TryTakeDamage(amount, sourcePosition);
+
+    // Devolve true se o dano realmente entrou (quem ataca usa isso para saber se o golpe foi gasto)
+    public bool TryTakeDamage(int amount, Vector2 sourcePosition)
+    {
+        if (IsDead) return false;
+
+        // Durante a invulnerabilidade, só passa dano MAIOR que o último recebido
+        // (assim o contato fraco não "come" o golpe forte da arma)
+        if (Time.time < invulnerableUntil && amount <= lastDamage) return false;
+
+        lastDamage = amount;
         health -= amount;
         invulnerableUntil = Time.time + invulnerabilityTime;
+
+        Debug.Log($"Player levou {amount} de dano. Vida: {health}");
+
+        float dirX = transform.position.x >= sourcePosition.x ? 1f : -1f;
 
         if (health <= 0)
         {
             IsDead = true;
             rb.linearVelocity = Vector2.zero;
+
+            if (CameraShake.Instance != null) CameraShake.Instance.ShakeHeavy(dirX);
+
             Invoke(nameof(Restart), restartDelay);
-            return;
+            return true;
         }
 
-        hurtUntil = Time.time + hurtDuration;
+        if (CameraShake.Instance != null) CameraShake.Instance.ShakeLight(dirX);
 
-        float dir = transform.position.x >= sourcePosition.x ? 1f : -1f;
-        rb.linearVelocity = new Vector2(dir * knockback.x, knockback.y);
+        hurtUntil = Time.time + hurtDuration;
+        rb.linearVelocity = new Vector2(dirX * knockback.x, knockback.y);
+        return true;
     }
 
     private void Restart()

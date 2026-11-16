@@ -18,7 +18,7 @@ public class AttackHitbox : MonoBehaviour
 
     void Update()
     {
-        // Limpa a lista cada vez que o collider liga de novo (cada golpe pode acertar uma vez)
+        // Cada vez que o collider liga de novo, o golpe pode acertar uma vez
         if (box.enabled && !wasEnabled) alreadyHit.Clear();
         wasEnabled = box.enabled;
     }
@@ -30,8 +30,8 @@ public class AttackHitbox : MonoBehaviour
 
         other.GetComponent<IDamageable>()?.TakeDamage(damage);
 
-        // Empurra para longe do Player
         float dir = other.transform.position.x >= transform.position.x ? 1f : -1f;
-        other.GetComponent<Slime>()?.ApplyKnockback(new Vector2(dir * knockback.x, knockback.y));
+        other.GetComponent<IKnockbackable>()?.ApplyKnockback(new Vector2(dir * knockback.x, knockback.y));
+        if (CameraShake.Instance != null) CameraShake.Instance.ShakeLight(dir);
     }
 }
