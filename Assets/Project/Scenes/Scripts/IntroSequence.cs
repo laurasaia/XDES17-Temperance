@@ -6,7 +6,6 @@ public class IntroSequence : MonoBehaviour
 {
     [SerializeField] private CanvasGroup title;
     [SerializeField] private CanvasGroup card;
-    [SerializeField] private CanvasGroup fade;
     [SerializeField] private string nextScene = "The Tower";
 
     [SerializeField] private float fadeTime = 1f;
@@ -15,25 +14,22 @@ public class IntroSequence : MonoBehaviour
 
     IEnumerator Start()
     {
-        fade.alpha = 1f;
         title.alpha = 0f;
         card.alpha = 0f;
 
         yield return new WaitForSeconds(0.5f);
 
-        // Título
+        // Título: fade in, fica, e some direto (sem fade out)
         yield return Fade(title, 0f, 1f);
         yield return new WaitForSeconds(titleHold);
-        yield return Fade(title, 1f, 0f);
+        title.alpha = 0f;
 
-        // Carta
+        // Carta: fade in, fica, fade out
         yield return Fade(card, 0f, 1f);
         yield return new WaitForSeconds(cardHold);
-
-        // Escurece tudo e começa a fase
         yield return Fade(card, 1f, 0f);
-        yield return new WaitForSeconds(0.3f);
 
+        yield return new WaitForSeconds(0.3f);
         SceneManager.LoadScene(nextScene);
     }
 

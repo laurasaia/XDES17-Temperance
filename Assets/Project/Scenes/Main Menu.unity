@@ -2372,7 +2372,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3d63ed4dcc149a4a95021da8d03b089, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayButton
-  sceneToLoad: The Tower
+  sceneToLoad: Intro Torre
 --- !u!224 &1519576438 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5327270364122875825, guid: a8d173e53f85cb443b071ca9ecf36057, type: 3}
