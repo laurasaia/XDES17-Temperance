@@ -82,7 +82,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 1717106597
-  m_SortingLayer: 5
+  m_SortingLayer: 9
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 8793639957104055765, guid: 246dd69b73c66e244bde2eaf3f5f85ae, type: 3}
@@ -203,8 +203,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9404ad2f68d4d404780609988e9bb72f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Slime
-  maxHealth: 30
-  damage: 2
+  maxHealth: 40
+  damage: 4
+  contactDamage: 4
   patrolSpeed: 1.5
   chaseSpeed: 3
   canChase: 1
@@ -214,7 +215,6 @@ MonoBehaviour:
   spriteFacesRight: 1
   sightRange: 6
   attackRange: 1.2
-  attackHitDelay: 0.3
   attackCooldown: 1
   armorWhileAttacking: 1
   hurtImmunityTime: 0.8

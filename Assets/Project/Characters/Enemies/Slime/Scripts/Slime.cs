@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class Slime : MonoBehaviour, IDamageable
+public class Slime : MonoBehaviour, IDamageable, IKnockbackable
 {
     private enum State { Patrol, Chase, Attack, Hurt, Dead }
 
@@ -20,15 +20,11 @@ public class Slime : MonoBehaviour, IDamageable
     [Header("Combate")]
     [SerializeField] private float sightRange = 6f;
     [SerializeField] private float attackRange = 1.2f;
-    [SerializeField] private float attackHitDelay = 0.3f;
     [SerializeField] private float attackCooldown = 1f;
-    
-    [Header("Resistência a stun")]
-    [SerializeField] private bool armorWhileAttacking = true; // não é interrompido enquanto ataca
-    [SerializeField] private float hurtImmunityTime = 0.8f;   // tempo sem poder ser atordoado após um Hurt
 
-    private float knockbackUntil;
-    private float nextHurtAllowed;
+    [Header("Resistência a stun")]
+    [SerializeField] private bool armorWhileAttacking = true;
+    [SerializeField] private float hurtImmunityTime = 0.8f;
 
     private const string idleAnim = "Idle";
     private const string walkAnim = "Walk";
@@ -48,6 +44,8 @@ public class Slime : MonoBehaviour, IDamageable
     private int dir = 1;
     private string currentAnim;
     private float nextAttackTime;
+    private float nextHurtAllowed;
+    private float knockbackUntil;
     private Coroutine actionRoutine;
 
     void Awake()
@@ -125,15 +123,7 @@ public class Slime : MonoBehaviour, IDamageable
         }
     }
 
-    public void ApplyKnockback(Vector2 velocity)
-    {
-        if (state == State.Dead) return;
-
-        rb.linearVelocity = velocity;
-        knockbackUntil = Time.time + 0.2f;
-    }
-
-    // Chamado por um Animation Event no clip Attack, no frame do golpe
+    // Animation Event no clip Attack, no frame do golpe
     public void DealAttackDamage()
     {
         if (state != State.Attack || player == null || playerHealth == null) return;
@@ -149,11 +139,18 @@ public class Slime : MonoBehaviour, IDamageable
         if (state == State.Dead) return;
 
         PlayerHealth p = collision.collider.GetComponentInParent<PlayerHealth>();
-        if (p != null)
-            p.TakeDamage(contactDamage, transform.position);
+        if (p != null) p.TakeDamage(contactDamage, transform.position);
     }
 
-        public void TakeDamage(int amount)
+    public void ApplyKnockback(Vector2 velocity)
+    {
+        if (state == State.Dead) return;
+
+        rb.linearVelocity = velocity;
+        knockbackUntil = Time.time + 0.2f;
+    }
+
+    public void TakeDamage(int amount)
     {
         if (state == State.Dead) return;
 
@@ -166,7 +163,6 @@ public class Slime : MonoBehaviour, IDamageable
             return;
         }
 
-        // Armadura durante o ataque e imunidade a stun logo depois de um Hurt
         if (armorWhileAttacking && state == State.Attack) return;
         if (Time.time < nextHurtAllowed) return;
 
@@ -187,6 +183,7 @@ public class Slime : MonoBehaviour, IDamageable
 
     private IEnumerator Die()
     {
+        if (CameraShake.Instance != null) CameraShake.Instance.ShakeHeavy();
         state = State.Dead;
         col.enabled = false;
         rb.linearVelocity = Vector2.zero;
@@ -195,6 +192,8 @@ public class Slime : MonoBehaviour, IDamageable
         PlayAnim(deathAnim, true);
         yield return WaitForAnimation(deathAnim);
 
+        // O corpo fica no último quadro do Death
+        enabled = false;
     }
 
     private IEnumerator Attack()
