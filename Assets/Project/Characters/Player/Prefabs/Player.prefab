@@ -253,7 +253,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0292b29f159f57f40a8295c91fcc6a42, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerJump
-  jumpForce: 10
+  jumpForce: 11
   groundCheck: {fileID: 34312268776657416}
   groundCheckRadius: 0.1
   groundLayer:
@@ -318,7 +318,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb03e56e4affa2940b76434afb1e581f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
-  maxHealth: 20
+  maxHealth: 25
   invulnerabilityTime: 1
   hurtDuration: 0.3
   knockback: {x: 4, y: 5}

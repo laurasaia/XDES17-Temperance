@@ -104,6 +104,7 @@ public class Skeleton : MonoBehaviour, IDamageable, IKnockbackable
             if (!wasSeeing && playReact && Time.time >= nextReactTime)
             {
                 wasSeeing = true;
+                state = State.React; // define já aqui, para não haver frame "livre"
                 actionRoutine = StartCoroutine(React());
                 return;
             }
@@ -146,7 +147,7 @@ public class Skeleton : MonoBehaviour, IDamageable, IKnockbackable
         if (state == State.Dead || state == State.Attack || state == State.React) return;
 
         PlayerHealth p = collision.collider.GetComponentInParent<PlayerHealth>();
-        if (p != null) p.TakeDamage(contactDamage, transform.position);
+        if (p != null && contactDamage > 0) p.TakeDamage(contactDamage, transform.position);
     }
 
     public void ApplyKnockback(Vector2 velocity)
@@ -185,6 +186,8 @@ public class Skeleton : MonoBehaviour, IDamageable, IKnockbackable
         PlayAnim(reactAnim, true);
         yield return WaitForAnimation(reactAnim);
 
+        // Força o próximo frame a pedir Walk/Idle de novo
+        currentAnim = null;
         state = State.Patrol;
         actionRoutine = null;
     }
@@ -197,6 +200,7 @@ public class Skeleton : MonoBehaviour, IDamageable, IKnockbackable
         yield return WaitForAnimation(hurtAnim);
 
         nextHurtAllowed = Time.time + hurtImmunityTime;
+        currentAnim = null;
         state = State.Patrol;
         actionRoutine = null;
     }
@@ -226,6 +230,7 @@ public class Skeleton : MonoBehaviour, IDamageable, IKnockbackable
 
         DisableHitbox();
         nextAttackTime = Time.time + attackCooldown;
+        currentAnim = null;
         state = State.Patrol;
         actionRoutine = null;
     }
@@ -248,7 +253,10 @@ public class Skeleton : MonoBehaviour, IDamageable, IKnockbackable
         }
 
         rb.linearVelocity = new Vector2(dir * speed, rb.linearVelocity.y);
-        PlayAnim(walkAnim);
+
+        // Se está andando e o Animator não está em Walk, volta para Walk
+        if (!animator.GetCurrentAnimatorStateInfo(0).IsName(walkAnim))
+            PlayAnim(walkAnim, true);
     }
 
     private void Stop()
@@ -282,7 +290,10 @@ public class Skeleton : MonoBehaviour, IDamageable, IKnockbackable
 
     private void PlayAnim(string anim, bool restart = false)
     {
-        if (anim == currentAnim && !restart) return;
+        bool alreadyPlaying = animator.GetCurrentAnimatorStateInfo(0).IsName(anim);
+
+        if (alreadyPlaying && anim == currentAnim && !restart) return;
+
         currentAnim = anim;
         animator.Play(anim, 0, 0f);
     }
@@ -298,9 +309,13 @@ public class Skeleton : MonoBehaviour, IDamageable, IKnockbackable
             yield return null;
         }
 
-        while (animator.GetCurrentAnimatorStateInfo(0).IsName(anim) &&
+        // Limite de segurança: nunca fica preso esperando um clip em loop
+        float maxWait = 3f;
+        while (maxWait > 0f &&
+               animator.GetCurrentAnimatorStateInfo(0).IsName(anim) &&
                animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1f)
         {
+            maxWait -= Time.deltaTime;
             yield return null;
         }
     }
