@@ -266,15 +266,27 @@ public class Skeleton : MonoBehaviour, IDamageable, IKnockbackable
 
     // Há chão à frente e nenhuma parede bloqueando?
     private bool PathClear()
+{
+    Bounds b = col.bounds;
+    float frontX = b.center.x + dir * (b.extents.x + 0.05f);
+
+    // Parede: terreno OU outro inimigo
+    int wallMask = groundLayer | (1 << gameObject.layer);
+
+    RaycastHit2D[] hits = Physics2D.RaycastAll(b.center, Vector2.right * dir, b.extents.x + 0.1f, wallMask);
+    bool wall = false;
+    foreach (RaycastHit2D h in hits)
     {
-        Bounds b = col.bounds;
-        float frontX = b.center.x + dir * (b.extents.x + 0.05f);
-
-        bool wall = Physics2D.Raycast(b.center, Vector2.right * dir, b.extents.x + 0.1f, groundLayer);
-        bool ground = Physics2D.Raycast(new Vector2(frontX, b.min.y + 0.1f), Vector2.down, 0.4f, groundLayer);
-
-        return !wall && ground;
+        if (h.collider == col) continue;          // ignora o próprio collider
+        if (h.collider.isTrigger) continue;       // ignora hitboxes (trigger)
+        wall = true;
+        break;
     }
+
+    bool ground = Physics2D.Raycast(new Vector2(frontX, b.min.y + 0.1f), Vector2.down, 0.4f, groundLayer);
+
+    return !wall && ground;
+}
 
     private void UpdateFlip()
     {

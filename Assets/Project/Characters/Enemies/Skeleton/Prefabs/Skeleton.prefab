@@ -205,9 +205,9 @@ MonoBehaviour:
     m_Bits: 64
   spriteFacesRight: 1
   attackHitbox: {fileID: 6359520341206709660}
-  sightRange: 7
+  sightRange: 5
   attackRange: 1.5
-  attackCooldown: 1
+  attackCooldown: 0.7
   playReact: 1
   reactCooldown: 5
   armorWhileAttacking: 1

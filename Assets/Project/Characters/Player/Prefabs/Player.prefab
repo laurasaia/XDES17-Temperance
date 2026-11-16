@@ -318,7 +318,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb03e56e4affa2940b76434afb1e581f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
-  maxHealth: 25
+  maxHealth: 40
   invulnerabilityTime: 1
   hurtDuration: 0.3
   knockback: {x: 4, y: 5}

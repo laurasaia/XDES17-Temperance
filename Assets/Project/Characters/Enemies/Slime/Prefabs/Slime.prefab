@@ -206,14 +206,14 @@ MonoBehaviour:
   maxHealth: 40
   damage: 4
   contactDamage: 4
-  patrolSpeed: 1.5
-  chaseSpeed: 3
+  patrolSpeed: 1
+  chaseSpeed: 2
   canChase: 1
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
   spriteFacesRight: 1
-  sightRange: 6
+  sightRange: 3
   attackRange: 1.2
   attackCooldown: 1
   armorWhileAttacking: 1
