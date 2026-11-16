@@ -152,12 +152,12 @@ TextureImporter:
       name: Furnace and Sawmill_0
       rect:
         serializedVersion: 2
-        x: 9
-        y: 63
-        width: 46
-        height: 65
+        x: 0
+        y: 64
+        width: 64
+        height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -174,12 +174,12 @@ TextureImporter:
       name: Furnace and Sawmill_1
       rect:
         serializedVersion: 2
-        x: 73
-        y: 63
-        width: 46
-        height: 65
+        x: 64
+        y: 64
+        width: 64
+        height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -196,12 +196,12 @@ TextureImporter:
       name: Furnace and Sawmill_2
       rect:
         serializedVersion: 2
-        x: 137
-        y: 63
-        width: 46
-        height: 65
+        x: 128
+        y: 64
+        width: 64
+        height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -218,12 +218,12 @@ TextureImporter:
       name: Furnace and Sawmill_3
       rect:
         serializedVersion: 2
-        x: 201
-        y: 63
-        width: 46
-        height: 65
+        x: 192
+        y: 64
+        width: 64
+        height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -240,12 +240,12 @@ TextureImporter:
       name: Furnace and Sawmill_4
       rect:
         serializedVersion: 2
-        x: 265
-        y: 63
-        width: 46
-        height: 61
+        x: 256
+        y: 64
+        width: 64
+        height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -262,12 +262,12 @@ TextureImporter:
       name: Furnace and Sawmill_5
       rect:
         serializedVersion: 2
-        x: 281
-        y: 122
-        width: 6
-        height: 6
+        x: 320
+        y: 64
+        width: 64
+        height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -284,12 +284,12 @@ TextureImporter:
       name: Furnace and Sawmill_6
       rect:
         serializedVersion: 2
-        x: 329
-        y: 63
-        width: 46
-        height: 65
+        x: 0
+        y: 0
+        width: 64
+        height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -306,12 +306,12 @@ TextureImporter:
       name: Furnace and Sawmill_7
       rect:
         serializedVersion: 2
-        x: 3
+        x: 64
         y: 0
-        width: 59
-        height: 55
+        width: 64
+        height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -328,12 +328,12 @@ TextureImporter:
       name: Furnace and Sawmill_8
       rect:
         serializedVersion: 2
-        x: 67
+        x: 128
         y: 0
-        width: 59
-        height: 55
+        width: 64
+        height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -350,12 +350,12 @@ TextureImporter:
       name: Furnace and Sawmill_9
       rect:
         serializedVersion: 2
-        x: 131
+        x: 192
         y: 0
-        width: 59
-        height: 55
+        width: 64
+        height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -372,12 +372,12 @@ TextureImporter:
       name: Furnace and Sawmill_10
       rect:
         serializedVersion: 2
-        x: 195
+        x: 256
         y: 0
-        width: 59
-        height: 55
+        width: 64
+        height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -394,12 +394,12 @@ TextureImporter:
       name: Furnace and Sawmill_11
       rect:
         serializedVersion: 2
-        x: 259
+        x: 320
         y: 0
-        width: 59
-        height: 55
+        width: 64
+        height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -412,33 +412,11 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
-    - serializedVersion: 2
-      name: Furnace and Sawmill_12
-      rect:
-        serializedVersion: 2
-        x: 323
-        y: 0
-        width: 59
-        height: 55
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 032da524e96f34290800000000000000
-      internalID: -7907205361153945040
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
     outline: []
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 693e35e1d884f7a4e9009a6157de4779
     internalID: 0
     vertices: []
     indices: 
@@ -446,13 +424,14 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     spriteCustomMetadata:
-      entries: []
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":64.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
       Furnace and Sawmill_0: 322551843701084172
       Furnace and Sawmill_1: -6656241319498553121
       Furnace and Sawmill_10: -7715094193708637152
       Furnace and Sawmill_11: -3019987784627197279
-      Furnace and Sawmill_12: -7907205361153945040
       Furnace and Sawmill_2: 6357518784351339271
       Furnace and Sawmill_3: -5811994443909173530
       Furnace and Sawmill_4: 2054116056872881446
