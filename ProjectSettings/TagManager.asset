@@ -13,7 +13,7 @@ TagManager:
   - UI
   - Ground
   - Enemy
-  - 
+  - Pickup
   - 
   - 
   - 
@@ -62,14 +62,17 @@ TagManager:
   - name: Deco
     uniqueID: 2362341711
     locked: 0
-  - name: Player
-    uniqueID: 3982036827
-    locked: 0
   - name: Enemy
     uniqueID: 1717106597
     locked: 0
+  - name: Player
+    uniqueID: 3982036827
+    locked: 0
   - name: Foreground
     uniqueID: 3083952615
+    locked: 0
+  - name: UI
+    uniqueID: 1723492057
     locked: 0
   m_RenderingLayers:
   - Default
