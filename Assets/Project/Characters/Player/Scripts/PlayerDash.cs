@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class PlayerDash : MonoBehaviour
 {
@@ -20,11 +19,7 @@ public class PlayerDash : MonoBehaviour
 
     public bool IsDashing { get; private set; }
     public bool IsDashAttacking { get; private set; }
-
-    // True no frame em que o clique foi consumido pelo dash (o ataque comum deve ignorá-lo)
     public bool ConsumedClickThisFrame => lastClickFrame == Time.frameCount;
-
-    // True enquanto o dash ou o DashAttack estão ativos
     public bool IsBusy => IsDashing || IsDashAttacking;
 
     void Awake()
@@ -49,12 +44,11 @@ public class PlayerDash : MonoBehaviour
         bool grounded = playerJump != null && playerJump.IsGrounded;
         if (grounded) airDashUsed = false;
 
-        if (IsDashAttacking) return; // quem encerra é o PlayerMovementState, ao fim do clip
+        if (IsDashAttacking) return;
 
         if (IsDashing)
         {
-            // Clique durante o dash: encerra o movimento e termina com o ataque
-            if (Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame)
+            if (GameInput.AttackPressed)
             {
                 lastClickFrame = Time.frameCount;
                 IsDashing = false;
@@ -66,17 +60,12 @@ public class PlayerDash : MonoBehaviour
             return;
         }
 
-        if (Keyboard.current == null) return;
-
         bool onWall = wallJump != null && wallJump.IsWallSliding;
         bool attacking = attack != null && attack.IsAttacking;
         bool canAir = grounded || !airDashUsed;
 
-        if (Keyboard.current.leftShiftKey.wasPressedThisFrame
-            && Time.time >= nextDashTime && !onWall && !attacking && canAir)
-        {
+        if (GameInput.DashPressed && Time.time >= nextDashTime && !onWall && !attacking && canAir)
             StartDash(grounded);
-        }
     }
 
     void FixedUpdate()
@@ -97,7 +86,6 @@ public class PlayerDash : MonoBehaviour
         rb.gravityScale = 0f;
     }
 
-    // Chamado pelo PlayerMovementState ao fim do clip (Dash ou DashAttack)
     public void EndDash()
     {
         IsDashing = false;

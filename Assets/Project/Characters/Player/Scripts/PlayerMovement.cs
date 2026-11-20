@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -40,17 +39,12 @@ public class PlayerMovement : MonoBehaviour
         if (health != null && (health.IsDead || health.IsHurt)) return;
         if (dash != null && dash.IsBusy) return;
 
-        if (Keyboard.current != null)
-        {
-            if (Keyboard.current.aKey.isPressed) moveInput -= 1f;
-            if (Keyboard.current.dKey.isPressed) moveInput += 1f;
-        }
+        moveInput = GameInput.Horizontal;
 
         bool attacking = attack != null && attack.IsAttacking;
         bool grounded = playerJump != null && playerJump.IsGrounded;
         bool sticking = wallJump != null && wallJump.IsSticking;
 
-        // Não vira durante o ataque no chão nem enquanto está preso à parede
         if (!(attacking && grounded) && !sticking)
         {
             if (moveInput > 0f) FacingLeft = false;
@@ -66,11 +60,8 @@ public class PlayerMovement : MonoBehaviour
             return;
         }
 
-        // Durante o hurt o knockback manda; durante o dash o PlayerDash manda
         if (health != null && health.IsHurt) return;
         if (dash != null && dash.IsBusy) return;
-
-        // Preso à parede: o PlayerWallJump controla a velocidade
         if (wallJump != null && wallJump.IsSticking) return;
 
         bool grounded = playerJump != null && playerJump.IsGrounded;

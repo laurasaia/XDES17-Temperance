@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class PlayerJump : MonoBehaviour
 {
@@ -26,12 +25,9 @@ public class PlayerJump : MonoBehaviour
     void Update()
     {
         if (health != null && (health.IsDead || health.IsHurt)) return;
-        if (Keyboard.current == null) return;
 
-        if (Keyboard.current.spaceKey.wasPressedThisFrame && isGrounded)
-        {
+        if (GameInput.JumpPressed && isGrounded)
             jumpRequested = true;
-        }
     }
 
     void FixedUpdate()

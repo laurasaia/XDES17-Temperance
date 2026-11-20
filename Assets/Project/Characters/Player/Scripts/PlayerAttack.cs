@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class PlayerAttack : MonoBehaviour
 {
@@ -27,20 +26,13 @@ public class PlayerAttack : MonoBehaviour
             return;
         }
 
-        if (Mouse.current == null) return;
-
         bool onWall = wallJump != null && wallJump.IsWallSliding;
         bool dashBusy = dash != null && (dash.IsBusy || dash.ConsumedClickThisFrame);
 
-        if (Mouse.current.leftButton.wasPressedThisFrame
-            && !IsAttacking && !onWall && !dashBusy
-            && Time.time >= nextAttackTime)
-        {
+        if (GameInput.AttackPressed && !IsAttacking && !onWall && !dashBusy && Time.time >= nextAttackTime)
             IsAttacking = true;
-        }
     }
 
-    // Chamado pelo PlayerMovementState quando o clip termina
     public void FinishAttack()
     {
         IsAttacking = false;
