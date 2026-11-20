@@ -1,6 +1,5 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class Mimic : MonoBehaviour, IDamageable, IKnockbackable
 {
@@ -14,6 +13,7 @@ public class Mimic : MonoBehaviour, IDamageable, IKnockbackable
     [Header("Interação (báu fechado)")]
     [SerializeField] private float interactRange = 1.5f;
     [SerializeField] private float openPause = 0.5f;
+    [SerializeField] private InteractPrompt prompt;
 
     [Header("Movimento")]
     [SerializeField] private float patrolSpeed = 1f; // 0 = fica parado até ver o player
@@ -36,6 +36,12 @@ public class Mimic : MonoBehaviour, IDamageable, IKnockbackable
     [Header("Resistência a stun")]
     [SerializeField] private bool armorWhileAttacking = true;
     [SerializeField] private float hurtImmunityTime = 1f;
+
+    [Header("Drop")]
+    [SerializeField] private GameObject keyPrefab;
+    [SerializeField] private Vector2 dropOffset = new Vector2(0f, 0.5f);
+    [SerializeField] private float dropDelay = 0.8f;                        // espera antes de a chave nascer
+    [SerializeField] private Vector2 dropImpulse = new Vector2(0.3f, 2f);
 
     private const string idleClosedAnim = "IdleC";
     private const string idleOpenAnim = "IdleO";
@@ -90,11 +96,11 @@ public class Mimic : MonoBehaviour, IDamageable, IKnockbackable
 
     void Update()
     {
-        // Báu fechado: o player abre com E
-        if (state != State.Closed || player == null || Keyboard.current == null) return;
+        // Báu fechado: o player abre com E ou Triangulo
+        if (state != State.Closed || player == null) return;
 
         float dist = Vector2.Distance(player.position, transform.position);
-        if (dist <= interactRange && Keyboard.current.eKey.wasPressedThisFrame)
+        if (dist <= interactRange && GameInput.InteractPressed)
             actionRoutine = StartCoroutine(Awaken());
     }
 
@@ -218,7 +224,8 @@ public class Mimic : MonoBehaviour, IDamageable, IKnockbackable
     private IEnumerator Awaken()
     {
         state = State.Awakening;
-
+        if (prompt != null) prompt.Hide();
+        
         PlayAnim(openingAnim, true);
         yield return WaitForAnimation(openingAnim);
 
@@ -324,6 +331,9 @@ public class Mimic : MonoBehaviour, IDamageable, IKnockbackable
     {
         if (CameraShake.Instance != null) CameraShake.Instance.ShakeHeavy();
         state = State.Dead;
+
+        StartCoroutine(DropKey());
+
         DisableLickHitbox();
         col.enabled = false;
         rb.linearVelocity = Vector2.zero;
@@ -334,6 +344,21 @@ public class Mimic : MonoBehaviour, IDamageable, IKnockbackable
 
         // O corpo fica no último quadro do Death
         enabled = false;
+    }
+
+    private IEnumerator DropKey()
+    {
+        yield return new WaitForSeconds(dropDelay);
+        if (keyPrefab == null) yield break;
+
+        GameObject key = Instantiate(keyPrefab, (Vector2)transform.position + dropOffset, Quaternion.identity);
+
+        Rigidbody2D krb = key.GetComponent<Rigidbody2D>();
+        if (krb != null)
+        {
+            float side = Random.value < 0.5f ? -1f : 1f;
+            krb.linearVelocity = new Vector2(side * dropImpulse.x, dropImpulse.y);
+        }
     }
 
     private void DisableLickHitbox()

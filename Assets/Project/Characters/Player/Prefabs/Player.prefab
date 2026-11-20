@@ -53,6 +53,7 @@ GameObject:
   - component: {fileID: 945332202836473417}
   - component: {fileID: 8122506748078283021}
   - component: {fileID: 2899870378534470216}
+  - component: {fileID: 1854467237468346300}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -124,7 +125,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -312930469
-  m_SortingLayer: 8
+  m_SortingLayer: 9
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 2100400606062974186, guid: 2f2d7cefcfa988740a0635a06c474f4c, type: 3}
@@ -402,6 +403,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3325d46d3059cb74681867640ba99421, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraShake
+--- !u!114 &1854467237468346300
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4164194383566927734}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 209940a73f8bcca43888f101c570c00a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerInventory
 --- !u!1 &5878139034060829266
 GameObject:
   m_ObjectHideFlags: 0
@@ -527,5 +540,5 @@ MonoBehaviour:
   enemyLayer:
     serializedVersion: 2
     m_Bits: 128
-  damage: 4
+  damage: 6
   knockback: {x: 2, y: 2}
