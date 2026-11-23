@@ -60,7 +60,8 @@ public class PlayerHealth : MonoBehaviour, IDamageable
 
             if (CameraShake.Instance != null) CameraShake.Instance.ShakeHeavy(dirX);
 
-            Invoke(nameof(Restart), restartDelay);
+            if (DeathSequence.Instance != null) DeathSequence.Instance.Play();
+            else Invoke(nameof(Restart), restartDelay);
             return true;
         }
 

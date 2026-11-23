@@ -13,6 +13,7 @@ public class PlayerJump : MonoBehaviour
     private PlayerHealth health;
     private bool isGrounded;
     private bool jumpRequested;
+    private bool extraJump;
 
     public bool IsGrounded => isGrounded;
 
@@ -22,17 +23,24 @@ public class PlayerJump : MonoBehaviour
         health = GetComponent<PlayerHealth>();
     }
 
+    // Chamado pelo orbe: libera um pulo no ar
+    public void GrantExtraJump() => extraJump = true;
+
     void Update()
     {
         if (health != null && (health.IsDead || health.IsHurt)) return;
 
-        if (GameInput.JumpPressed && isGrounded)
+        if (GameInput.JumpPressed && (isGrounded || extraJump))
+        {
+            if (!isGrounded) extraJump = false;
             jumpRequested = true;
+        }
     }
 
     void FixedUpdate()
     {
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
+        if (isGrounded) extraJump = false;
 
         if (jumpRequested)
         {

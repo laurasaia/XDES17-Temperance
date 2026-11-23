@@ -15,6 +15,7 @@ public class PlayerDash : MonoBehaviour
     private float nextDashTime;
     private float originalGravity;
     private bool airDashUsed;
+    private bool resetPending;
     private int lastClickFrame = -1;
 
     public bool IsDashing { get; private set; }
@@ -31,6 +32,14 @@ public class PlayerDash : MonoBehaviour
         health = GetComponent<PlayerHealth>();
         attack = GetComponent<PlayerAttack>();
         originalGravity = rb.gravityScale;
+    }
+
+    // Chamado pelo orbe: devolve o dash no ar (vale também se o orbe for tocado durante um dash)
+    public void ResetAirDash()
+    {
+        airDashUsed = false;
+        nextDashTime = 0f;
+        resetPending = true;
     }
 
     void Update()
@@ -78,6 +87,7 @@ public class PlayerDash : MonoBehaviour
 
     private void StartDash(bool grounded)
     {
+        resetPending = false;
         IsDashing = true;
         IsDashAttacking = false;
         if (!grounded) airDashUsed = true;
@@ -93,5 +103,13 @@ public class PlayerDash : MonoBehaviour
         nextDashTime = Time.time + dashCooldown;
         rb.gravityScale = originalGravity;
         rb.linearVelocity = new Vector2(0f, rb.linearVelocity.y);
+
+        // Se o orbe foi tocado durante o dash, o reset vale agora
+        if (resetPending)
+        {
+            airDashUsed = false;
+            nextDashTime = 0f;
+            resetPending = false;
+        }
     }
 }
