@@ -8,23 +8,35 @@ public class ControlsTutorial : MonoBehaviour
     [System.Serializable]
     public class Step
     {
-        public Sprite[] icons;       // 1 ou mais ícones (ex.: analógico e direcional)
+        public Sprite[] icons;       // 1 ou mais ícones
         [TextArea] public string text;
         public float duration = 3f;
     }
 
+    // Lembra, enquanto o jogo estiver aberto, que o tutorial já foi mostrado
+    private static bool alreadyShown;
+
     [SerializeField] private CanvasGroup group;
-    [SerializeField] private Image[] iconSlots;   // 2 Images lado a lado (usa quantas precisar)
+    [SerializeField] private Image[] iconSlots;
     [SerializeField] private TMP_Text label;
     [SerializeField] private Step[] steps;
 
-    [SerializeField] private float startDelay = 1f;
+    [SerializeField] private float startDelay = 4f;   // espera antes de começar
     [SerializeField] private float fadeTime = 0.4f;
     [SerializeField] private float gapBetweenSteps = 0.3f;
 
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    private static void ResetStatic() => alreadyShown = false;
     IEnumerator Start()
     {
         group.alpha = 0f;
+
+        if (alreadyShown)
+        {
+            gameObject.SetActive(false);
+            yield break;
+        }
+
         yield return new WaitForSeconds(startDelay);
 
         foreach (Step s in steps)
@@ -36,6 +48,7 @@ public class ControlsTutorial : MonoBehaviour
             yield return new WaitForSeconds(gapBetweenSteps);
         }
 
+        alreadyShown = true;
         gameObject.SetActive(false);
     }
 

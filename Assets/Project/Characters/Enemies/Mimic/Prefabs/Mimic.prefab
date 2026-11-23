@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 4348923175747346735}
   - component: {fileID: 2669801466735232021}
   - component: {fileID: 212616940642807699}
+  - component: {fileID: 1341399371381991414}
   m_Layer: 7
   m_Name: Mimic
   m_TagString: Untagged
@@ -233,6 +234,21 @@ MonoBehaviour:
   dropOffset: {x: 0, y: 0.5}
   dropDelay: 0.8
   dropImpulse: {x: 1.5, y: 3}
+--- !u!114 &1341399371381991414
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6569615400009458115}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65cb4c30f97594e4887d9cfe4b580581, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HitFlash
+  flashColor: {r: 1, g: 0.34901962, b: 0.34901962, a: 1}
+  flashTime: 0.08
+  flashes: 1
 --- !u!1 &7614661316726470035
 GameObject:
   m_ObjectHideFlags: 0

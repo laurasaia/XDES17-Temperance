@@ -54,6 +54,7 @@ public class Skeleton : MonoBehaviour, IDamageable, IKnockbackable
     private float nextHurtAllowed;
     private float knockbackUntil;
     private Coroutine actionRoutine;
+    private HitFlash flash;
 
     void Awake()
     {
@@ -61,6 +62,7 @@ public class Skeleton : MonoBehaviour, IDamageable, IKnockbackable
         rb = GetComponent<Rigidbody2D>();
         col = GetComponent<Collider2D>();
         sr = GetComponent<SpriteRenderer>();
+        flash = GetComponent<HitFlash>();
         health = maxHealth;
     }
 
@@ -163,6 +165,7 @@ public class Skeleton : MonoBehaviour, IDamageable, IKnockbackable
         if (state == State.Dead) return;
 
         health -= amount;
+        if (flash != null) flash.Flash();
 
         if (health <= 0)
         {

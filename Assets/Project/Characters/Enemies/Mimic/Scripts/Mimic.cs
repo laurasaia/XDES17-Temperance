@@ -70,6 +70,7 @@ public class Mimic : MonoBehaviour, IDamageable, IKnockbackable
     private float nextHurtAllowed;
     private float knockbackUntil;
     private Coroutine actionRoutine;
+    private HitFlash flash;
 
     private bool IsActive => state != State.Closed && state != State.Awakening && state != State.Dead;
 
@@ -79,6 +80,7 @@ public class Mimic : MonoBehaviour, IDamageable, IKnockbackable
         rb = GetComponent<Rigidbody2D>();
         col = GetComponent<Collider2D>();
         sr = GetComponent<SpriteRenderer>();
+        flash = GetComponent<HitFlash>();
         health = maxHealth;
     }
 
@@ -204,6 +206,7 @@ public class Mimic : MonoBehaviour, IDamageable, IKnockbackable
         if (!IsActive) return;
 
         health -= amount;
+        if (flash != null) flash.Flash();
 
         if (health <= 0)
         {

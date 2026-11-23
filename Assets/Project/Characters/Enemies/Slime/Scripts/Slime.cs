@@ -47,6 +47,7 @@ public class Slime : MonoBehaviour, IDamageable, IKnockbackable
     private float nextHurtAllowed;
     private float knockbackUntil;
     private Coroutine actionRoutine;
+    private HitFlash flash;
 
     void Awake()
     {
@@ -54,6 +55,7 @@ public class Slime : MonoBehaviour, IDamageable, IKnockbackable
         rb = GetComponent<Rigidbody2D>();
         col = GetComponent<Collider2D>();
         sr = GetComponent<SpriteRenderer>();
+        flash = GetComponent<HitFlash>();
         health = maxHealth;
     }
 
@@ -155,7 +157,8 @@ public class Slime : MonoBehaviour, IDamageable, IKnockbackable
         if (state == State.Dead) return;
 
         health -= amount;
-
+        if (flash != null) flash.Flash();
+        
         if (health <= 0)
         {
             if (actionRoutine != null) StopCoroutine(actionRoutine);
