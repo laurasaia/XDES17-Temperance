@@ -265,7 +265,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Ato 2,
+  m_text: 'Ato 2
 
     A Lua'
   m_isRightToLeft: 0
