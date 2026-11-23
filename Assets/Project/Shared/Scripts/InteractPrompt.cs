@@ -50,6 +50,12 @@ public class InteractPrompt : MonoBehaviour
     public void Hide() => forcedHidden = true;
     public void Show() => forcedHidden = false;
 
+    public void SetVerb(string newVerb)
+    {
+        verb = newVerb;
+        if (label != null) label.text = newVerb;
+    }
+
     void LateUpdate()
     {
         float p = transform.parent != null ? Mathf.Abs(transform.parent.lossyScale.x) : 1f;
